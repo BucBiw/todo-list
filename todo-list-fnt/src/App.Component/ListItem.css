@@ -22,6 +22,12 @@
     cursor: pointer;
 }
 
+.list p input{
+    background-color: transparent;
+    border: 0;
+    color: #ffffff;
+}
+
 .faicons{
     margin: 0 5px;
     font-size: 15px;

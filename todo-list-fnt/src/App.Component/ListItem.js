@@ -7,7 +7,15 @@ function ListItem(props){
     const items = Array.from(props.items);
     const listitem = items.map(item => {
         return <div className="list" key={item.key}>
-            <p>{ item.text }
+            <p>
+                <input type="text" 
+                id={ item.text } 
+                value={ item.text }
+                onChange={
+                    (e) => {
+                        props.setUpdate(e.target.value, item.key);
+                    }
+                } />
                 <span>
                     <FontAwesomeIcon className="faicon" 
                     icon='trash'

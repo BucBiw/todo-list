@@ -26,6 +26,7 @@ class App extends React.Component{
     }
     this.addItem = this.addItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
+    this.setUpdate = this.setUpdate.bind(this);
     this.handleInput = this.handleInput.bind(this);
   }
 
@@ -44,9 +45,6 @@ class App extends React.Component{
         }
       });
       users.items.push(newItem);
-      users.items.forEach(element => {
-        console.log('item: ' + element.text);
-      });
     }
   }
 
@@ -56,6 +54,23 @@ class App extends React.Component{
       items: filteredItems
     });
     users.items = filteredItems;
+  }
+
+  setUpdate(text, key){
+    const items = this.state.items;
+    items.map(item => {
+      if(item.key === key){
+        item.text = text;
+      }
+    });
+    this.setState({
+      items: items
+    });
+    users.items.map(item => {
+      if(item.key === key){
+        item.text = text;
+      }
+    });
     users.items.forEach(element => {
       console.log('item: ' + element.text);
     });
@@ -82,7 +97,8 @@ class App extends React.Component{
             <button type="submit" id="addButton">Add</button>
           </form>
           <ListItem items={this.state.items}
-          deleteItem = {this.deleteItem}></ListItem>
+          deleteItem = {this.deleteItem}
+          setUpdate = {this.setUpdate} ></ListItem>
         </div>
       </header>
     );
