@@ -1,0 +1,15 @@
+.list{
+    color: #ffffff;
+    width: 95%;
+    background-color: #dd9332;
+    height: 50px;
+    margin: 20px auto;
+    padding: 10px auto;
+    border-radius: 5px;
+}
+
+.list p{
+    color: #ffffff;
+    padding: 10px;
+    font-size: 20px;
+}
