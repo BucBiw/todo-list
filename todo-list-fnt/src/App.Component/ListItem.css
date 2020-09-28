@@ -4,12 +4,25 @@
     background-color: #dd9332;
     height: 50px;
     margin: 20px auto;
-    padding: 10px auto;
+    margin-bottom: 20px;
     border-radius: 5px;
 }
 
-.list p{
+.list p span{
+    position: absolute;
     color: #ffffff;
+    font-size: 20px;
+    right: 10px;
+}
+
+.list p{
     padding: 10px;
     font-size: 20px;
+    position: relative;
+    cursor: pointer;
+}
+
+.faicons{
+    margin: 0 5px;
+    font-size: 15px;
 }
