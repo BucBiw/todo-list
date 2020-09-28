@@ -1,12 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import * as serviceWorker from './serviceWorker';
-import Home from './Home';
+
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+// import Home from './Home';
+import App from './App.Component/App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Home />
+    {/* <Home /> */}
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
