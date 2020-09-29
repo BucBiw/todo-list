@@ -5,13 +5,13 @@ import * as serviceWorker from './serviceWorker';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// import Home from './Home';
+import Home from './Home.Component/Home'
 import App from './App.Component/App';
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <Home /> */}
-    <App />
+    <Home />
+    {/* <App /> */}
   </React.StrictMode>,
   document.getElementById('root')
 );

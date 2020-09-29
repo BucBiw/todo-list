@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import FacebookLogin from 'react-facebook-login';
 import Button from 'react-bootstrap/Button';
 import { BrowserRouter as Router } from "react-router-dom";
 
@@ -7,20 +8,33 @@ import { BrowserRouter as Router } from "react-router-dom";
 // import color from 'color';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
+import Axios from 'axios';
 
 function Home() {
-    return (
-        <div className="Home">
-            <header className="Home-header">
-                <title>todo List</title>
-                <h1>todo-List (Home)</h1>
-            </header>
+    const signUserIn = async (response) => {
+        console.log('Res---->', response);
+        const { name, email, accessToken, userID } = response
+        const user = { name, email, accessToken, userID: userID }
 
-            <Button variant="primary">Log In</Button>
-            <Button variant="light">Sign Up</Button>
-            <Link to="/App">
-                <Button variant="success">Go to App</Button>
-            </Link>
+        await Axios({
+            method: 'post',
+            url: 'http://localhost:4000/signin/facebook',
+            data: {
+                user,
+            }
+        });
+    }
+
+    return (
+        <div className='Home'>
+            <div>
+                <FacebookLogin
+                    appId='2107368362741206'
+                    fields='name, email'
+                    scope='public_profile, email'
+                    callback={signUserIn} 
+                />
+            </div>
         </div>
     );
 }

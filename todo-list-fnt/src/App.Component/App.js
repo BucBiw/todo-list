@@ -1,5 +1,4 @@
 import React from 'react';
-
 import './App.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
@@ -94,7 +93,6 @@ class App extends React.Component{
             value={this.state.currentItem.text}
             onChange={this.handleInput} />
             <button type="submit" id="searchButton">Search</button>
-            <button type="submit" id="addButton">Add</button>
           </form>
           <ListItem items={this.state.items}
           deleteItem = {this.deleteItem}
