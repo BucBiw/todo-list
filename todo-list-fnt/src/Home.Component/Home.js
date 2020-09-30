@@ -3,12 +3,11 @@ import FacebookLogin from 'react-facebook-login';
 import Button from 'react-bootstrap/Button';
 import { BrowserRouter as Router } from "react-router-dom";
 
-// import jss from 'jss';
-// import preset from 'jss-preset-default';
-// import color from 'color';
-
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Axios from 'axios';
+
+import App from '../App.Component/App';
+
 
 function Home() {
     const signUserIn = async (response) => {

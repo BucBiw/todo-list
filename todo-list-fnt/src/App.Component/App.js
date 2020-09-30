@@ -1,7 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
+import { Button, Col, Form, Modal, Row, Container } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import nextId from 'react-id-generator';
+
 import './App.css';
+import "react-datepicker/dist/react-datepicker.css";
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 
 import ListItem from './ListItem';
 
@@ -11,96 +16,91 @@ const users = {
 }
 
 library.add(faTrash);
+library.add(faPlusSquare);
 
-class App extends React.Component{
-  constructor(props){
-    super(props);
-    this.state={
-      username: 'test01',
-      items: [],
-      currentItem:{
-        text: '',
-        key: ''
-      }
-    }
-    this.addItem = this.addItem.bind(this);
-    this.deleteItem = this.deleteItem.bind(this);
-    this.setUpdate = this.setUpdate.bind(this);
-    this.handleInput = this.handleInput.bind(this);
+function App () {
+  const [items, setItems] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [currentItem, setCurrentItem] = useState({
+    text: '',
+    key: nextId(),
+    date: new Date()
+  });
+
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+  
+  const deleteItem = (key) => {
+    const filteredItem = items.filter(item => item.key !== key);
+    setItems(filteredItem);
   }
 
-  addItem(e){
-    e.preventDefault();
-    const newItem = this.state.currentItem;
-    console.log(newItem);
-
-    if(newItem.text !== ''){
-      const items = [...this.state.items, newItem];
-      this.setState({
-        items: items,
-        currentItem: {
-          text: '',
-          key: ''
+  const setUpdate = (changeItem) => {
+    const changeItems = items;
+    console.log(changeItem);
+    changeItems.map(
+      item => {
+        if(item.key === changeItem.key){
+          item.text = changeItem.text;
+          item.date = changeItem.date;
+          console.log(typeof(item.date));
         }
-      });
-      users.items.push(newItem);
-    }
-  }
-
-  deleteItem(key){
-    const filteredItems = this.state.items.filter(item => item.key !== key);
-    this.setState({
-      items: filteredItems
-    });
-    users.items = filteredItems;
-  }
-
-  setUpdate(text, key){
-    const items = this.state.items;
-    items.map(item => {
-      if(item.key === key){
-        item.text = text;
       }
-    });
-    this.setState({
-      items: items
-    });
-    users.items.map(item => {
-      if(item.key === key){
-        item.text = text;
-      }
-    });
-    users.items.forEach(element => {
-      console.log('item: ' + element.text);
-    });
-  }
-
-  handleInput(e){
-    this.setState({
-      currentItem: {
-        text: e.target.value,
-        key: Date.now()
-      }
-    });
-  }
-
-  render(){
-    return (
-      <header>
-        <div className="App">
-          <form id="to-do-list-form" onSubmit={this.addItem}>
-            <input type="text" placeholder="Add to Search"
-            value={this.state.currentItem.text}
-            onChange={this.handleInput} />
-            <button type="submit" id="searchButton">Search</button>
-          </form>
-          <ListItem items={this.state.items}
-          deleteItem = {this.deleteItem}
-          setUpdate = {this.setUpdate} ></ListItem>
-        </div>
-      </header>
     );
+      setItems(changeItems);
   }
+
+  return (
+    
+    <div className="App">
+      {/* <p>#DEBUG {JSON.stringify(currentItem)}</p>
+      <p>#DEBUG {JSON.stringify(items)}</p> */}
+      <Container>
+        <Form>
+          <Row md={10}>
+            <Col sm={8} xs={2}>
+              <Form.Control type="text" placeholder="Search Something"></Form.Control>
+            </Col>
+            <Col sm={4} xs={2}>
+              <Button variant="primary" size="lg"><h6>Search</h6></Button>
+              <Button variant="success" size="lg" onClick={handleShowModal}><h6>Add</h6></Button>
+            </Col>
+          </Row>
+        </Form>
+        </Container>
+        <ListItem items={items.sort((a, b) => b.date - a.date)}
+          deleteItem = {deleteItem}
+          setUpdate = {setUpdate} />
+        <Modal show={showModal} onHide={handleCloseModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add To Do</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Label>What You Do: </Form.Label>
+              <Form.Control type="text" onChange={e=> {
+                setCurrentItem({...currentItem, text: e.target.value, key: nextId()})
+              }}></Form.Control>
+              <Form.Label>Time To Do</Form.Label>
+              <DatePicker selected={currentItem.date} onChange={
+                e => {
+                  setCurrentItem({...currentItem, date: e});
+                }
+              }></DatePicker>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="success" onClick={e => {
+              e.preventDefault();
+              setItems([...items, currentItem]);
+              setShowModal(false)
+            }}>Add Item</Button>
+            <Button variant="danger" onClick={handleCloseModal}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+    </div>
+    
+  );
 }
 
 export default App;
