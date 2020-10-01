@@ -71,6 +71,8 @@ function App () {
         <ListItem items={items.sort((a, b) => b.date - a.date)}
           deleteItem = {deleteItem}
           setUpdate = {setUpdate} />
+
+        {/* Create Item In To Do List */}
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
             <Modal.Title>Add To Do</Modal.Title>
