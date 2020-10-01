@@ -2,21 +2,30 @@
   "name": "todo-list-bck",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "dependencies": {
-    "axios": "^0.20.0",
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
+    "@sendgrid/mail": "7.2.6",
+    "@typegoose/typegoose": "7.4.1",
+    "apollo-server-express": "^2.18.1",
+    "bcryptjs": "2.4.3",
+    "cookie-parser": "1.4.5",
+    "dotenv": "8.2.0",
     "express": "^4.17.1",
-    "nodemon": "^2.0.4",
-    "passport": "^0.4.1",
-    "passport-facebook": "^3.0.0"
+    "graphql": "15.3.0",
+    "jsonwebtoken": "8.5.1",
+    "mongoose": "5.10.7",
+    "passport": "0.4.1",
+    "passport-facebook": "3.0.0",
+    "reflect-metadata": "0.1.13",
+    "type-graphql": "1.0.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "build": "rimraf dist && tsc",
+    "start": "npm run build && node dist/index.js"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC"
 }
