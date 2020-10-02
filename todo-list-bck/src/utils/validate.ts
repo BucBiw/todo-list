@@ -15,9 +15,9 @@ export const validateEmail = (email: string) => {
 export const validatePassword = (password: string) => {
   const fmtPassword = password;
 
-  if (fmtPassword.length >= 6 && fmtPassword.length <= 50)
+  if (fmtPassword.length <= 6 && fmtPassword.length >= 50)
     return 1;
-  else if (fmtPassword.toLowerCase() && fmtPassword.toUpperCase())
+  else if (!fmtPassword.toLowerCase() && !fmtPassword.toUpperCase())
     return 2;
   else
     return 0;

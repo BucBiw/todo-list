@@ -1,6 +1,7 @@
-import { RoleOpions } from './../Typrs/index';
-import { arrayProp, getModelForClass, prop } from '@typegoose/typegoose'
+import { getModelForClass, prop } from '@typegoose/typegoose'
 import { ObjectType, Field, ID } from 'type-graphql'
+
+import { RoleOpions } from './../Typrs/index';
 
 @ObjectType({ description: 'User Model' })
 export class User {
@@ -35,11 +36,11 @@ export class User {
   facebookID?: string
   
   @Field(() => [String])
-  @arrayProp({
-    item: String,
+  @prop({
+    type: String,
     enum: RoleOpions,
     default: [RoleOpions.client]
-  } )
+  })
   roles: RoleOpions[]
 
   @Field()

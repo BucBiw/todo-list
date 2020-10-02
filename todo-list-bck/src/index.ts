@@ -4,10 +4,12 @@ config();
 
 import express from 'express';
 import mongoose from 'mongoose';
+import passport from 'passport';
+import CookieParser from 'cookie-parser';
 
-import createServer from './createServer'
+import createServer from './createServer';
 
-const {PORT, DB_PASSWORD, DB_USERNAME, DB_ENDPOINT, DB_NAME } = process.env
+const { PORT, DB_PASSWORD, DB_USERNAME, DB_ENDPOINT, DB_NAME } = process.env;
 
 const startServer = async () => {
     //connect to the database
@@ -21,6 +23,12 @@ const startServer = async () => {
             });
 
         const app = express();
+
+        app.use(CookieParser());
+
+        //facebook login
+        app.get('/auth/facebook', passport.authenticate('facebook'));
+
         const server = await createServer();
 
         server.applyMiddleware({ app });
