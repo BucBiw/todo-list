@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Profile } from 'passport-facebook';
 
 export enum RoleOpions {
   client = 'CLIENT',
@@ -10,7 +11,7 @@ export enum RoleOpions {
 export interface AppRequest extends Request {
   userId?: string
   tokenVersion?: number
-  userProfile?: number
+  userProfile?: Profile
 }
 
 export interface AppContext {

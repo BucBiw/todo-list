@@ -3,7 +3,7 @@ import { buildSchema } from 'type-graphql';
 
 import TodoResolvers from './resolvers/TodoResolvers';
 import { UserModel } from './entities/User';
-import { AppContext } from './Typrs/index';
+import { AppContext } from './Types/index';
 import { verifyToken, sendToken, createToken } from './utils/tokenHandler';
 
 export default async () => {

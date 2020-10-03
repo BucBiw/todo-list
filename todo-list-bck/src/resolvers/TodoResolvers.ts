@@ -4,7 +4,7 @@ import { Resolver, Query, Mutation, Arg, Ctx, ObjectType, Field } from 'type-gra
 import bcrypt from 'bcryptjs';
 
 import { User, UserModel } from './../entities/User';
-import { RoleOpions, AppContext } from './../Typrs';
+import { RoleOpions, AppContext } from '../Types';
 import { sendToken, createToken } from './../utils/tokenHandler';
 import { validateUsername, validateEmail, validatePassword } from './../utils/validate';
 

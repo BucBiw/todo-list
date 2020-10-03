@@ -1,4 +1,4 @@
-import { AppRequest } from './../Typrs/index';
+import { AppRequest } from '../Types/index';
 import { UserModel } from './../entities/User';
 
 

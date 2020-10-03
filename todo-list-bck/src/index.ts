@@ -1,11 +1,10 @@
-import { config } from 'dotenv';
-config();
-
-
+import { FBAuthenticate } from './passport/socialMediaAuth';
 import express from 'express';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import CookieParser from 'cookie-parser';
+import { config } from 'dotenv';
+config();
 
 import createServer from './createServer';
 
@@ -28,6 +27,14 @@ const startServer = async () => {
 
         //facebook login
         app.get('/auth/facebook', passport.authenticate('facebook'));
+
+        //facebook route
+        app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+            session: false,
+            failureRedirect: 'http://localhost:3000',
+            scope: ['profile', 'email']
+        }), FBAuthenticate
+        );
 
         const server = await createServer();
 
