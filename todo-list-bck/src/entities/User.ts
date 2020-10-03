@@ -1,7 +1,7 @@
 import { getModelForClass, prop } from '@typegoose/typegoose'
 import { ObjectType, Field, ID } from 'type-graphql'
 
-import { RoleOpions } from '../Types/index';
+import { RoleOpions} from '../Types/index';
 
 @ObjectType({ description: 'User Model' })
 export class User {
@@ -20,7 +20,10 @@ export class User {
   password: string
 
   @Field(() => [Todo])
-  @prop({default: []})
+  @prop({
+    type: Object,
+    default: []
+  })
   todoList: Todo[]
 
   @prop({ default: 0 })
@@ -48,7 +51,7 @@ export class User {
   createdAt: Date
 }
 
-@ObjectType({ description: 'Todo Model' })
+@ObjectType()
 class Todo {
   @Field()
   key: string

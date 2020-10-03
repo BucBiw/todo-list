@@ -18,3 +18,9 @@ export interface AppContext {
   req: AppRequest
   res: Response
 }
+
+export interface Item {
+  key: string
+  text: string
+  date: Date
+}

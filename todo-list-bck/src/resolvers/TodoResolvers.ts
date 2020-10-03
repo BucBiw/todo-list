@@ -9,7 +9,7 @@ import { sendToken, createToken } from './../utils/tokenHandler';
 import { validateUsername, validateEmail, validatePassword } from './../utils/validate';
 
 @ObjectType()
-export class ResponseMessage{
+export class ResponseMessage {
   @Field()
   message: string
 }
@@ -17,7 +17,7 @@ export class ResponseMessage{
 @Resolver()
 export default class TodoResolvers {
   @Query(() => [User], { nullable: 'items' }) //[User]!
-  async users(@Ctx() {req}: AppContext): Promise<User[] | null> {
+  async users(@Ctx() { req }: AppContext): Promise<User[] | null> {
     try {
       const user = await isAuthenticated(req);
       // Check Admin And Superadmin
@@ -25,7 +25,7 @@ export default class TodoResolvers {
 
       if (!isAuthorized) throw new Error('No Authorization')
 
-      return UserModel.find().sort({createdAt: 'desc'});
+      return UserModel.find().sort({ createdAt: 'desc' });
     } catch (error) {
       throw (error);
     }
@@ -82,7 +82,7 @@ export default class TodoResolvers {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       //create new user
-      const newUser = await UserModel.create<Pick<User, 'username'| 'email' | 'password'>>({
+      const newUser = await UserModel.create<Pick<User, 'username' | 'email' | 'password'>>({
         username,
         email,
         password: hashedPassword
@@ -146,8 +146,8 @@ export default class TodoResolvers {
 
       //clear cookie in brownser
       res.clearCookie(process.env.COOKIE_NAME!);
-      
-      return {message: "Good Bye"};
+
+      return { message: "Good Bye" };
     } catch (error) {
       throw (error)
     }
@@ -157,7 +157,7 @@ export default class TodoResolvers {
   async updateRoles(
     @Arg('newRoles', () => [String]) newRoles: RoleOpions[],
     @Arg('userId') userId: string,
-    @Ctx() {req}: AppContext
+    @Ctx() { req }: AppContext
   ) {
     try {
       const admin = await isAuthenticated(req);
@@ -168,7 +168,7 @@ export default class TodoResolvers {
 
       //Query user to be update
       const user = await UserModel.findById(userId);
-      if(!user) throw new Error('User not found.')
+      if (!user) throw new Error('User not found.')
       //update roles
       user.roles = newRoles;
 
@@ -179,6 +179,77 @@ export default class TodoResolvers {
     }
   }
 
+  @Mutation(() => User, { nullable: true })
+  async additem(
+    @Arg('key') key: string,
+    @Arg('text') text: string,
+    @Arg('date') date: Date,
+    @Ctx() { req }: AppContext
+  ): Promise<User | null> {
+    try {
+      const user = await isAuthenticated(req);
+      if (!user) throw new Error('Not authenticated.');
+      const newItem = {
+        key: key,
+        text: text,
+        date: date
+      }
+      user.todoList.push(newItem)
+      await user.save();
+      console.log(user.todoList);
+      return user;
+    } catch (error) {
+      throw (error);
+    }
+  }
+
+  @Mutation(() => User, { nullable: true })
+  async deleteitem(
+    @Arg('key') key: string,
+    @Ctx() { req }: AppContext
+  ): Promise<User | null> {
+    try {
+      const user = await isAuthenticated(req);
+      if (!user) throw new Error('Not authenticated.');
+
+      const deletedKey = key;
+      const filterList = user.todoList.filter(todo => todo.key !== deletedKey);
+
+      user.todoList = filterList;
+      await user.save();
+      return user;
+    } catch (error) {
+      throw (error);
+    }
+  }
+
+  @Mutation(() => User, { nullable: true })
+  async updateitem(
+    @Arg('key') key: string,
+    @Arg('newText') newText: string,
+    @Arg('newDate') newDate: string,
+    @Ctx() {req}: AppContext
+  ) {
+    try {
+      const user = await isAuthenticated(req);
+      if (!user) throw new Error('Not authenticated.');
+
+      // await user.update({ 'todoList.key': key },
+      //   {'$set': {
+      //     'todoList.$.text': newText,
+      //     'todoList.$.date': newDate
+      //   }
+      //   },(err) => {
+      //     if (err) {
+      //       throw (err);
+      //     }
+      //   }
+      // );
+      // return user;
+    } catch (error) {
+      throw (error);
+    }
+  }
   // @Mutation(() => User, { nullable: true })
   // async requestResetPassword(
   //   @Arg('email') email: string
@@ -195,7 +266,7 @@ export default class TodoResolvers {
   //     const resetPasswordTokenExpiry = Date.now() + 1000 * 60 * 30;
 
   //     const updatedUser = await UserModel.findOneAndUpdate({ email }, { resetPasswordToken, resetPasswordTokenExpiry }, { new: true });
-      
+
   //     if (!updatedUser) throw new Error('Sorry, cannot process.');
 
   //     //check password is valid
