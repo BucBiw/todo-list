@@ -8,7 +8,7 @@ config();
 
 import createServer from './createServer';
 
-const { PORT, DB_PASSWORD, DB_USERNAME, DB_ENDPOINT, DB_NAME } = process.env;
+const { PORT, DB_PASSWORD, DB_USERNAME, DB_ENDPOINT, DB_NAME, FRONTEND_URL } = process.env;
 
 const startServer = async () => {
     //connect to the database
@@ -38,7 +38,7 @@ const startServer = async () => {
 
         const server = await createServer();
 
-        server.applyMiddleware({ app });
+        server.applyMiddleware({ app, cors: {origin: FRONTEND_URL, credentials: true} });
 
         app.listen({ port: PORT }, () => console.log(`Server's Ready at: http://localhost:${PORT}${server.graphqlPath}`));
     } catch (error) {

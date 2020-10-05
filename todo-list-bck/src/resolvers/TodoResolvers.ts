@@ -223,33 +223,33 @@ export default class TodoResolvers {
     }
   }
 
-  @Mutation(() => User, { nullable: true })
-  async updateitem(
-    @Arg('key') key: string,
-    @Arg('newText') newText: string,
-    @Arg('newDate') newDate: string,
-    @Ctx() {req}: AppContext
-  ) {
-    try {
-      const user = await isAuthenticated(req);
-      if (!user) throw new Error('Not authenticated.');
+  // @Mutation(() => User, { nullable: true })
+  // async updateitem(
+  //   @Arg('key') key: string,
+  //   @Arg('newText') newText: string,
+  //   @Arg('newDate') newDate: string,
+  //   @Ctx() {req}: AppContext
+  // ) {
+  //   try {
+  //     const user = await isAuthenticated(req);
+  //     if (!user) throw new Error('Not authenticated.');
 
-      // await user.update({ 'todoList.key': key },
-      //   {'$set': {
-      //     'todoList.$.text': newText,
-      //     'todoList.$.date': newDate
-      //   }
-      //   },(err) => {
-      //     if (err) {
-      //       throw (err);
-      //     }
-      //   }
-      // );
-      // return user;
-    } catch (error) {
-      throw (error);
-    }
-  }
+  //     // await user.update({ 'todoList.key': key },
+  //     //   {'$set': {
+  //     //     'todoList.$.text': newText,
+  //     //     'todoList.$.date': newDate
+  //     //   }
+  //     //   },(err) => {
+  //     //     if (err) {
+  //     //       throw (err);
+  //     //     }
+  //     //   }
+  //     // );
+  //     // return user;
+  //   } catch (error) {
+  //     throw (error);
+  //   }
+  // }
   // @Mutation(() => User, { nullable: true })
   // async requestResetPassword(
   //   @Arg('email') email: string

@@ -14,7 +14,6 @@ type Mutation {
   signin(email: String!, password: String!): User
   signout: ResponseMessage
   signup(email: String!, password: String!, username: String!): User
-  updateitem(key: String!, newDate: String!, newText: String!): User
   updateRoles(newRoles: [String!]!, userId: String!): User
 }
 
