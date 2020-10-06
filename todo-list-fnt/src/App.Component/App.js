@@ -18,7 +18,7 @@ const users = {
 library.add(faTrash);
 library.add(faPlusSquare);
 
-function App () {
+function App (props) {
   const [items, setItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentItem, setCurrentItem] = useState({

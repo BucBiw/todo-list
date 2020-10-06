@@ -1,43 +1,81 @@
 import React, { useState } from 'react';
 import { Row, Button, Col, Container, Modal, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
+import { useCookies } from 'react-cookie';
 // import { ErrorMessage } from '@hookform/error-message';
 import { useMutation } from '@apollo/client';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';;
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import App from '../App.Component/App';
-import { SIGN_UP } from '../Apollo/mutations'
+
 
 
 function Home() {
-    const [signup, { loading, error }] = useMutation(SIGN_UP);
+
+    const history = useHistory();
+    const [cookies, setCookie] = useCookies(['jwt']);
 
     const [showModalSignin, setShowModalSignin] = useState(false);
-    const [showModalSignup, setShowModalSignup] = useState(false);
-
     const handleShowModalSignin = () => setShowModalSignin(true);
     const handleCloseModalSignin = () => setShowModalSignin(false);
+
+    const [showModalSignup, setShowModalSignup] = useState(false);
     const handleShowModalSignup = () => setShowModalSignup(true);
     const handleCloseModalSignup = () => setShowModalSignup(false);
 
+    const [logIn, setlogIn] = useState(true);
+    const handleLogin = () => setlogIn(true);
+    const handleLogOut = () => setlogIn(false);
+
     const { register, handleSubmit, errors } = useForm();
 
-    const submitSignup = handleSubmit( async ({ username, email, password }) => {
-        console.log(username, ' : ', email, ' : ', password);
-        
-            const res = await signup({
-                variables: { username, email, password }});
+    const submitSignin = handleSubmit(async ({ email, password }) => {
+        console.log(email, ' : ', password);
+        const body = {
+            email,
+            password
+        };
+        const res = axios.post('http://localhost:5000/login', body)
+            .then((response) => {
+                const user = response.data.user;
+                const token = response.data.token;
+                console.log(token);
+                console.log(user);
+                handleCloseModalSignin();
+                history.push('/app');
+                handleLogin();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    })
 
-            console.log(typeof(res.data))
-            if(res?.data?.signup){
-                console.log(res?.data?.signup);
-            }
-        
+    const submitSignup = handleSubmit(async ({ username, email, password }) => {
+        console.log(username, ' : ', email, ' : ', password);
+        const body = {
+            username,
+            email,
+            password
+        }
+        axios.post('http://localhost:5000/register', body)
+            .then((response) => {
+                console.log(response);
+                handleCloseModalSignup();
+                handleLogin();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     });
 
-    console.log('Loading: ', loading);
-    console.log('Error: ', error);
+    const submitSignOut = handleSubmit(() => {
+        history.push('/');
+        handleLogOut()
+    });
+
 
     return (
         <div className='Home'>
@@ -47,25 +85,36 @@ function Home() {
                         <h1>ToDoList</h1>
                         <br />
                     </Col>
-                    <Col>
-                        <Button onClick={handleShowModalSignin}>Sign In</Button>
-                        <Button onClick={handleShowModalSignup}>Sign Up</Button>
-                    </Col>
+                    {
+                        logIn === false ? (
+                            <Col>
+                                <Button onClick={handleShowModalSignin}>Sign In</Button>
+                                <Button onClick={handleShowModalSignup}>Sign Up</Button>
+                            </Col>
+                        ) : logIn === true ? (
+                            <Col>
+                                <Button onClick={submitSignOut}>Sign Out</Button>
+                            </Col>
+                        ) : null
+                    }
                 </Row>
             </Container>
             {/* Sign In Modal */}
             <Modal show={showModalSignin} onHide={handleCloseModalSignin}>
                 <Modal.Header closeButton>Sign In</Modal.Header>
                 <Modal.Body>
-                    <Form>
+                    <Form onSubmit={submitSignin}>
                         <Form.Label>Email: </Form.Label>
-                        <Form.Control type="text"></Form.Control>
+                        <Form.Control type="text" name="email"
+                            ref={register}></Form.Control>
                         <Form.Label>Password: </Form.Label>
-                        <Form.Control type="password"></Form.Control>
+                        <Form.Control type="password" name="password"
+                            ref={register}></Form.Control>
+                        <Button type="submit">Sign In</Button>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button>Sign In</Button><br />
+                    <br />
                     <Button><a href='http://localhost:4000/auth/facebook'>Log In With Facebook</a></Button>
                 </Modal.Footer>
             </Modal>
@@ -74,12 +123,6 @@ function Home() {
             <Modal show={showModalSignup} onHide={handleCloseModalSignup}>
                 <Modal.Header closeButton>Sign Up</Modal.Header>
                 <Modal.Body>
-                    {/* <form onSubmit={submitSignup}>
-                    <input name="email" ref={register} />
-                    <input name="username" ref={register} />
-                    <input type="password" name="password" ref={register} />
-                    <button type="submit">Submit</button>
-                </form> */}
                     <Form onSubmit={submitSignup}>
                         <Form.Label>Email: </Form.Label>
                         <Form.Control type="text" name="email"
@@ -98,6 +141,7 @@ function Home() {
                     <Button>Sign Up With Facebook</Button>
                 </Modal.Footer>
             </Modal>
+
         </div>
     );
 }
