@@ -11,3 +11,12 @@ body{
     padding-bottom: 20px;
     border-radius: 10px;
 }
+
+#SocielLogin{
+    background: blue;
+    font-size: 18px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 10px 20px;
+}

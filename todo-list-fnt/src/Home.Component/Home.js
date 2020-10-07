@@ -1,22 +1,21 @@
+
 import React, { useState } from 'react';
 import { Row, Button, Col, Container, Modal, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useCookies } from 'react-cookie';
 // import { ErrorMessage } from '@hookform/error-message';
-import { useMutation } from '@apollo/client';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';;
+import { useHistory } from 'react-router-dom';
+import FacebookLogin from 'react-facebook-login';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import App from '../App.Component/App';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
 function Home() {
 
     const history = useHistory();
-    const [cookies, setCookie] = useCookies(['jwt']);
+    const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
 
     const [showModalSignin, setShowModalSignin] = useState(false);
     const handleShowModalSignin = () => setShowModalSignin(true);
@@ -26,7 +25,7 @@ function Home() {
     const handleShowModalSignup = () => setShowModalSignup(true);
     const handleCloseModalSignup = () => setShowModalSignup(false);
 
-    const [logIn, setlogIn] = useState(true);
+    const [logIn, setlogIn] = useState(false);
     const handleLogin = () => setlogIn(true);
     const handleLogOut = () => setlogIn(false);
 
@@ -38,12 +37,11 @@ function Home() {
             email,
             password
         };
-        const res = axios.post('http://localhost:5000/login', body)
+        axios.post('http://localhost:5000/login', body)
             .then((response) => {
-                const user = response.data.user;
                 const token = response.data.token;
                 console.log(token);
-                console.log(user);
+                setCookie('jwt', token);
                 handleCloseModalSignin();
                 history.push('/app');
                 handleLogin();
@@ -63,17 +61,44 @@ function Home() {
         axios.post('http://localhost:5000/register', body)
             .then((response) => {
                 console.log(response);
+                const token = response.data.token;
+                setCookie('jwt', token);
                 handleCloseModalSignup();
+                history.push('/app');
                 handleLogin();
             })
             .catch((error) => {
                 console.log(error);
             });
-    });
+    }); 
+
+    const responseFacebook = (response) => {
+        console.log("Res---->", response);
+    }
+
+    const signInByFacebook = handleSubmit(async () => {
+        axios.get('http://localhost:5000/auth/facebook').then((response) => {
+            console.log(response);
+            const token = response.data.token;
+            setCookie('jwt', token);
+            history.push('/app');
+            handleLogin();
+        });
+    }); 
 
     const submitSignOut = handleSubmit(() => {
+        const cookie = cookies;
+        const token = cookie.jwt
+        removeCookie('jwt');
+        console.log('token: ',token);
+        const body = {
+            token: token
+        };
+        axios.post('http://localhost:5000/logout', body).then((response) => {
+            console.log(response);
+        });
         history.push('/');
-        handleLogOut()
+        handleLogOut();
     });
 
 
@@ -114,8 +139,16 @@ function Home() {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <br />
-                    <Button><a href='http://localhost:4000/auth/facebook'>Log In With Facebook</a></Button>
+                    {/* <FacebookLogin
+                        appId="895031030904400"
+                        autoLoad={false}
+                        fields="id, displayName"
+                        onClick={<button>FB</button>}
+                        scope="id, email, displayname"
+                        callBack={responseFacebook}
+                        icon="fa-facebook"
+                    /> */}
+                    <button id="SocialLogin" ><a href="http://localhost:5000/auth/facebook">Login With Facebook</a></button>
                 </Modal.Footer>
             </Modal>
 
@@ -138,7 +171,7 @@ function Home() {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button>Sign Up With Facebook</Button>
+                    <Button className="SocielLogin" onClick={signInByFacebook}>Sign Up With Facebook</Button>
                 </Modal.Footer>
             </Modal>
 

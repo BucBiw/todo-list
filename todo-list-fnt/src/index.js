@@ -1,26 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
-import {BrowserRouter, Route} from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { createStore } from 'redux';
+import Switch from 'react-bootstrap/esm/Switch';
+import { CookiesProvider } from 'react-cookie';
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Home from './Home.Component/Home'
 import App from './App.Component/App';
-import {client} from './Apollo/client';
-import Switch from 'react-bootstrap/esm/Switch';
+
+
 
 ReactDOM.render(
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" component={Home}>
-          </Route>
-          <Route path="/app" component={App}>
-            
-          </Route>
-        </Switch>
-      </BrowserRouter>,
+  <BrowserRouter>
+    <CookiesProvider>
+      <Switch>
+        <Route path="/" component={Home}>
+        </Route>
+        <Route path="/app" component={App}>
+        </Route>
+      </Switch>
+    </CookiesProvider>
+  </BrowserRouter>,
   document.getElementById('root')
 );
 

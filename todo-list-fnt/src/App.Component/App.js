@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Button, Col, Form, Modal, Row, Container } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import nextId from 'react-id-generator';
+import { useCookies, withCookies } from 'react-cookie';
+import axios from 'axios';
 
 import './App.css';
 import "react-datepicker/dist/react-datepicker.css";
@@ -9,16 +11,31 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTrash, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 
 import ListItem from './ListItem';
+import getCookies from '../getCookies';
+import { Redirect, useHistory } from 'react-router-dom';
 
-const users = {
-  username: 'test01',
-  items: []
-}
+
 
 library.add(faTrash);
 library.add(faPlusSquare);
 
-function App (props) {
+function App(props) {
+  const cookie = getCookies('jwt');
+  const history = useHistory();
+  console.log('cookie: ', cookie);
+  if (cookie) {
+    const body = { token: cookie };
+    const res = axios.post('http://localhost:5000/me', body).then((response) => {
+      console.log(response);
+    }).catch((error) => {
+      console.log(error);
+    });
+    console.log(res);
+  } else {
+    history.push('/');
+  }
+
+  
   const [items, setItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentItem, setCurrentItem] = useState({
@@ -29,7 +46,7 @@ function App (props) {
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-  
+
   const deleteItem = (key) => {
     const filteredItem = items.filter(item => item.key !== key);
     setItems(filteredItem);
@@ -40,18 +57,18 @@ function App (props) {
     console.log(changeItem);
     changeItems.map(
       item => {
-        if(item.key === changeItem.key){
+        if (item.key === changeItem.key) {
           item.text = changeItem.text;
           item.date = changeItem.date;
-          console.log(typeof(item.date));
+          console.log(typeof (item.date));
         }
       }
     );
-      setItems(changeItems);
+    setItems(changeItems);
   }
 
   return (
-    
+
     <div className="App">
       {/* <p>#DEBUG {JSON.stringify(currentItem)}</p>
       <p>#DEBUG {JSON.stringify(items)}</p> */}
@@ -67,41 +84,41 @@ function App (props) {
             </Col>
           </Row>
         </Form>
-        </Container>
-        <ListItem items={items.sort((a, b) => b.date - a.date)}
-          deleteItem = {deleteItem}
-          setUpdate = {setUpdate} />
+      </Container>
+      <ListItem items={items.sort((a, b) => b.date - a.date)}
+        deleteItem={deleteItem}
+        setUpdate={setUpdate} />
 
-        {/* Create Item In To Do List */}
-        <Modal show={showModal} onHide={handleCloseModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Add To Do</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Form.Label>What You Do: </Form.Label>
-              <Form.Control type="text" onChange={e=> {
-                setCurrentItem({...currentItem, text: e.target.value, key: nextId()})
-              }}></Form.Control>
-              <Form.Label>Time To Do</Form.Label>
-              <DatePicker selected={currentItem.date} onChange={
-                e => {
-                  setCurrentItem({...currentItem, date: e});
-                }
-              }></DatePicker>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="success" onClick={e => {
-              e.preventDefault();
-              setItems([...items, currentItem]);
-              setShowModal(false)
-            }}>Add Item</Button>
-            <Button variant="danger" onClick={handleCloseModal}>Close</Button>
-          </Modal.Footer>
-        </Modal>
+      {/* Create Item In To Do List */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add To Do</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Label>What You Do: </Form.Label>
+            <Form.Control type="text" onChange={e => {
+              setCurrentItem({ ...currentItem, text: e.target.value, key: nextId() })
+            }}></Form.Control>
+            <Form.Label>Time To Do</Form.Label>
+            <DatePicker selected={currentItem.date} onChange={
+              e => {
+                setCurrentItem({ ...currentItem, date: e });
+              }
+            }></DatePicker>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={e => {
+            e.preventDefault();
+            setItems([...items, currentItem]);
+            setShowModal(false)
+          }}>Add Item</Button>
+          <Button variant="danger" onClick={handleCloseModal}>Close</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
-    
+
   );
 }
 
