@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Col, Form, Modal, Row, Container } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import nextId from 'react-id-generator';
-import { useCookies, withCookies } from 'react-cookie';
 import axios from 'axios';
 
 import './App.css';
@@ -12,30 +11,28 @@ import { faTrash, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 
 import ListItem from './ListItem';
 import getCookies from '../getCookies';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import getUser from './getUser';
+
 
 
 
 library.add(faTrash);
 library.add(faPlusSquare);
 
-function App(props) {
-  const cookie = getCookies('jwt');
+const cookie = getCookies('jwt');
+getUser(cookie);
+
+
+// console.log(user);
+
+function  App() {
   const history = useHistory();
-  console.log('cookie: ', cookie);
-  if (cookie) {
-    const body = { token: cookie };
-    const res = axios.post('http://localhost:5000/me', body).then((response) => {
-      console.log(response);
-    }).catch((error) => {
-      console.log(error);
-    });
-    console.log(res);
-  } else {
+  if (!cookie) {
     history.push('/');
   }
 
-  
+  const [data, setData] = useState();
   const [items, setItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentItem, setCurrentItem] = useState({

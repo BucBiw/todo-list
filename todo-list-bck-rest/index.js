@@ -62,16 +62,16 @@ app.post('/register', async (req, res) => {
             var token = jwt.sign({ id, tokenV }, 'Aaboltip', {
                 expiresIn: 86400 //ใช้ได้ 24 hr
             });
-            res.status(200).send({ auth: true, token: token, user: newUser }).cookie('jwt', token, { httpOnly: true });
+            res.status(200).send({ auth: true, token: token, user: user }).cookie('jwt', token, { httpOnly: true });
         });
     } catch (error) {
         throw (error)
     }
 });
 
-app.post('/me', async(req, res) => {
-    console.log(req.body.token)
-    var token = req.body.token;
+app.get('/me/:body', async(req, res) => {
+    console.log(req.params.body.token)
+    var token = req.params.body.token;
 
     if (!token) res.status(401).send({ auth: false, message: 'No token provided.' });
     const decodeToken = jwt.verify(token, 'Aaboltip');
@@ -82,9 +82,10 @@ app.post('/me', async(req, res) => {
     if(decodeToken.tokenV !== user.tokenVersion) res.status(401).send({ auth: false, message: 'User not Authenticate.' });
     console.log(user);
 
-    res.status(200).send({ auth: true, username: user.username, email: user.email, todoList: user.todoList });
+    res.status(200).json({ auth: true, username: user.username, email: user.email, todoList: user.todoList });
 
 });
+
 
 app.post('/login', async (req, res) => {
     const email = await req.body.email;

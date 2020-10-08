@@ -20,3 +20,10 @@ body{
     cursor: pointer;
     padding: 10px 20px;
 }
+
+.error p{
+    margin: 0;
+    padding: 0;
+    color: red;
+    font-size: 1.3rem;
+}
