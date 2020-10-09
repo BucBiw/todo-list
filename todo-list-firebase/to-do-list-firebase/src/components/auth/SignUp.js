@@ -32,11 +32,11 @@ export class SignUp extends Component {
                     </div>
                     <div className="input-field">
                         <label htmlFor="firstName">First Name</label>
-                        <input type="text" id="firstName" onChange={this.handleChange} autoComplete="on" />
+                        <input type="text" id="firstName" onChange={this.handleChange} />
                     </div>
                     <div className="input-field">
                         <label htmlFor="lastName">Last Name</label>
-                        <input type="text" id="lastName" onChange={this.handleChange} autoComplete="on" />
+                        <input type="text" id="lastName" onChange={this.handleChange} />
                     </div>
                     <div className="input-field">
                         <button type="submit" className="btn pink lighten-1 z-depth-0">Sign Up</button>

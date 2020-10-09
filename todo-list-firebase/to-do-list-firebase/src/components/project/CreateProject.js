@@ -1,25 +1,29 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { DatePicker } from 'react-materialize';
+
+
+import { createProject } from '../../store/actions/projectAction'
 
 import "materialize-css/dist/css/materialize.min.css";
 import "materialize-css/dist/js/materialize.min.js";
 
-export class CreateProject extends Component {
+class CreateProject extends Component {
     state = {
         title: '',
-        date: Date(),
-        time: TimeRanges()
+        date: Date()
     }
 
     handleChange = (e) => {
         this.setState({
             [e.target.id]: e.target.value
         })
-        console.log(this.state);
+        //console.log(this.state);
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state);
+        //console.log(this.state);
+        this.props.createProject(this.state);
     }
     render() {
         return (
@@ -31,10 +35,10 @@ export class CreateProject extends Component {
                         <input type="text" id="title" onChange={this.handleChange} />
                     </div>
                     <div className="input-field">
-                        <DatePicker 
-                            label="Date" 
-                            value={this.state.date} 
-                            id="date" 
+                        <DatePicker
+                            label="Date"
+                            value={this.state.date}
+                            id="date"
                             onChange={(e) => {
                                 this.handleChange({
                                     target: {
@@ -42,7 +46,7 @@ export class CreateProject extends Component {
                                         value: e
                                     }
                                 })
-                            }} 
+                            }}
                         />
                     </div>
                     <div className="input-field">
@@ -54,4 +58,10 @@ export class CreateProject extends Component {
     }
 }
 
-export default CreateProject
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createProject: (project) => dispatch(createProject(project))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(CreateProject)

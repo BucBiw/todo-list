@@ -1,8 +1,8 @@
 import React from 'react';
 
-const ProjectItem = () => {
+const ProjectItem = ({ project }) => {
     return (
-        <a href="#!" class="collection-item todo-item"><span class="badge"></span>Alan</a>
+    <a href="#!" className="collection-item todo-item"><span className="badge"></span>{project.title}</a>
     );
 }
 
