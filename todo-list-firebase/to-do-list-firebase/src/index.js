@@ -18,17 +18,22 @@ import fbConfig from './config/fbConfig';
 const store = createStore(rootReducer,
     compose(
       applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})), // redux binding for firebase
-      reduxFirestore(fbConfig) // redux bindings for firestore
+      reduxFirestore(firebase, fbConfig) // redux bindings for firestore
     )
   );
 
+  const profileSpecificProps = {
+    userProfile: 'users', // where profiles are stored in database,
+    useFirestoreForProfile: true,
+    enableRedirectHandling: false,
+    resetBeforeLogin: false
+  }
+
   const rrfProps = {
     firebase,
-    config: fbConfig,
+    config: profileSpecificProps,
     dispatch: store.dispatch,
-    createFirestoreInstance,
-    userProfile: 'users',
-    presence: 'sessions'
+    createFirestoreInstance
   };
 
   const AuthIsLoaded = ({children}) => {

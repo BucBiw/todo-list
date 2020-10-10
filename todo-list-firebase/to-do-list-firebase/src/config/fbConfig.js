@@ -11,8 +11,8 @@ var firebaseConfig = {
     projectId: "todolist-14281",
     storageBucket: "todolist-14281.appspot.com",
     messagingSenderId: "129506197423",
-    appId: "1:129506197423:web:ac24ecf2e44aa5402fb95a",
-    measurementId: "G-560J6R5T8S"
+    appId: "1:129506197423:web:6ef8de3c2c4ea6ad2fb95a",
+    measurementId: "G-RMWW2SQKWK"
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);

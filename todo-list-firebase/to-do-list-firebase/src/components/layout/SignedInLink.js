@@ -4,11 +4,14 @@ import {connect} from 'react-redux';
 import {signOut} from '../../store/actions/authActions'
 
 const SignedInLink = (props) => {
+    console.log('Ini: ', props.profile);
     return (
         <ul className="right">
             <li><NavLink to='/create'>New Todo</NavLink></li>
             <li><a onClick={props.signOut}>Log Out</a></li> 
-            <li><NavLink to='/' className='btn btn-floating green lighten-1'>BT</NavLink></li>
+            <li><NavLink to='/' className='btn btn-floating green lighten-1'>
+                {props.profile.initials}
+            </NavLink></li>
         </ul>
     );
 }
@@ -18,5 +21,6 @@ const mapDispatchToProps = (dispatch) => {
         signOut: () => dispatch(signOut())
     }
 }
+
 
 export default connect(null, mapDispatchToProps)(SignedInLink);

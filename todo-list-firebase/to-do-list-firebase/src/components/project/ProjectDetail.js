@@ -2,10 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
-import {format} from 'date-fns';
+import {Redirect} from 'react-router-dom';
+import moment from 'moment'
 
 function ProjectDetail(props) {
-    const { project } = props;
+    const { project, auth } = props;
+    if (!auth.uid) return <Redirect to='/signin' />
     if (project) {
         return (
             <div className="container section project-details">
@@ -15,13 +17,7 @@ function ProjectDetail(props) {
                     </div>
                     <div className="card-action grey lighten-4 grey-text">
                         <div>ลิสต์ใจเกเร </div>
-                        <div>{
-                            new Intl.DateTimeFormat("en-GB", {
-                                year: "numeric",
-                                month: "long",
-                                day: "2-digit"
-                              }).format(project.data)
-                        }</div>
+                        <div>{moment(project.date).format("Do MMM YYYY")}</div>
                     </div>
                 </div>
             </div>
@@ -41,7 +37,8 @@ const mapStateToProps = (state, ownProps) => {
     const projects = state.firestore.data.projects;
     const project = projects ? projects[id] : null
     return {
-        project: project
+        project: project,
+        auth: state.firebase.auth
     }
 }
 
