@@ -32,7 +32,7 @@ function ProjectDetail(props) {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    console.log('map ', state);
+    // console.log('map ', state);
     const id = ownProps.match.params.id;
     const projects = state.firestore.data.projects;
     const project = projects ? projects[id] : null

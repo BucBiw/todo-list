@@ -10,7 +10,7 @@ import { auth } from 'firebase';
 
 class Dashboard extends Component {
     render() {
-        // console.log(this.props);
+        console.log(this.props.user);
         const { projects, auth, user } = this.props;
         if (!auth.uid) return <Redirect to='/signin' />
 
@@ -27,7 +27,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = (state) => {
-    // console.log("DB", state);
+    console.log("DB", state);
     const id = state.firebase.auth.uid;
     const users = state.firestore.data.users;
     const user = users ? users[id] : null;

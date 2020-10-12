@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { signUp } from '../../store/actions/authActions'
+import { signUp, signInWithFacebook } from '../../store/actions/authActions'
 
 export class SignUp extends Component {
     state = {
@@ -19,6 +19,10 @@ export class SignUp extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.signUp(this.state)
+    }
+    handleClick = (e) => {
+        e.preventDefault();
+        this.props.signInWithFacebook()
     }
     render() {
         const { auth, authError } = this.props;
@@ -49,6 +53,9 @@ export class SignUp extends Component {
                             {authError ? <p>{authError}</p> : null}
                         </div>
                     </div>
+                    <div className="input-field">
+                            <button className="btn blue lighten-1 z-depth-0" onClick={this.handleClick}>Login With Facebook</button>
+                    </div>
                 </form>
             </div>
         )
@@ -64,7 +71,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        signUp: (newUser) => dispatch(signUp(newUser))
+        signUp: (newUser) => dispatch(signUp(newUser)),
+        signInWithFacebook: () => dispatch(signInWithFacebook())
     }
 }
 

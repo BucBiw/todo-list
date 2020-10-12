@@ -1,13 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { signIn } from '../../store/actions/authActions'
-import {Redirect} from 'react-router-dom';
+import { signIn, signInWithFacebook } from '../../store/actions/authActions'
+import { Redirect } from 'react-router-dom';
 
 export class SignIn extends Component {
     state = {
         email: '',
         password: ''
     }
+
+    // uiConfig = {
+    //     // Popup signin flow rather than redirect flow.
+    //     signInFlow: 'popup',
+    //     // We will display Google , Facebook , Etc as auth providers.
+    //     signInOptions: [
+    //         firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    //         firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+    //         firebase.auth.GithubAuthProvider.PROVIDER_ID,
+    //         firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    //     ],
+    //     callbacks: {
+    //         // Avoid redirects after sign-in.
+    //     }
+    // };
 
     handleChange = (e) => {
         this.setState({
@@ -18,9 +33,14 @@ export class SignIn extends Component {
         e.preventDefault();
         this.props.signIn(this.state);
     }
+    handleClick = (e) => {
+        e.preventDefault();
+        this.propssignInWithFacebook()
+    }
+
     render() {
         const { authError, auth } = this.props;
-        if(auth.uid) return <Redirect to='/' />
+        if (auth.uid) return <Redirect to='/' />
         return (
             <div className="container">
                 <form onSubmit={this.handleSubmit} className="white">
@@ -39,6 +59,9 @@ export class SignIn extends Component {
                             {authError ? <p>{authError}</p> : null}
                         </div>
                     </div>
+                    <div className="input-field">
+                        <button className="btn blue lighten-1 z-depth-0" onClick={this.handleClick}>Login With Facebook</button>
+                    </div>
                 </form>
             </div>
         )
@@ -55,7 +78,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        signIn: (creds) => dispatch(signIn(creds))
+        signIn: (creds) => dispatch(signIn(creds)),
+        signInWithFacebook: () => dispatch(signInWithFacebook())
     }
 }
 
